@@ -60,20 +60,20 @@ async function run() {
       for (const groupName of groupNames) {
         console.log("Going to url", postUrl);
         await page.goto(postUrl);
-        await new Promise((resolve) => setTimeout(resolve, 5000));
+        await new Promise((resolve) => setTimeout(resolve, 8000));
 
         console.log("Sharing...");
         await clickShareButton(page);
-        await new Promise((resolve) => setTimeout(resolve, 5000));
+        await new Promise((resolve) => setTimeout(resolve, 8000));
 
         await clickGroupButton(page);
-        await new Promise((resolve) => setTimeout(resolve, 5000));
+        await new Promise((resolve) => setTimeout(resolve, 8000));
 
         await selectGroup(page, groupName);
-        await new Promise((resolve) => setTimeout(resolve, 5000));
+        await new Promise((resolve) => setTimeout(resolve, 8000));
 
         await clickPostButton(page);
-        await new Promise((resolve) => setTimeout(resolve, 5000));
+        await new Promise((resolve) => setTimeout(resolve, 8000));
 
         console.log(`${postUrl} Posted to ${groupName}\n`);
       }
