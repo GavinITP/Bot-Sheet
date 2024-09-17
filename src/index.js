@@ -1,18 +1,3 @@
-const express = require("express");
-const app = express();
-const port = process.env.PORT || 3000;
-app.set("view engine", "ejs");
-app.get("/fbActions", (req, res) => {
-  res.render("fbActions.js");
-});
-app.get("/getSheetData", (req, res) => {
-  res.render("getSheetData.js");
-});
-
-app.listen(port, () => {
-  console.log(`App listening on port ${port}`);
-});
-
 const puppeteer = require("puppeteer");
 const dotenv = require("dotenv");
 
