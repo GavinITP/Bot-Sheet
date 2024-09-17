@@ -37,6 +37,12 @@ async function run() {
   });
   const page = await browser.newPage();
 
+  // Handle dialogs like alerts, confirms, prompts
+  page.on("dialog", async (dialog) => {
+    console.log(`Dialog detected: ${dialog.message()}`);
+    await dialog.accept(); // Automatically accept the pop-up
+  });
+
   try {
     const EMAIL = process.env.EMAIL || "";
     const PASSWORD = process.env.PASSWORD || "";
