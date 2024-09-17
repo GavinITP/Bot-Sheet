@@ -1,11 +1,17 @@
-const express = require('express');
+const express = require("express");
 const app = express();
 const port = process.env.PORT || 3000;
-app.set('view engine', 'ejs');
-app.get('/fbActions', (req, res) => {res.render('fbActions.js')});
-app.get('/getSheetData', (req, res) => {res.render('getSheetData.js')});
+app.set("view engine", "ejs");
+app.get("/fbActions", (req, res) => {
+  res.render("fbActions.js");
+});
+app.get("/getSheetData", (req, res) => {
+  res.render("getSheetData.js");
+});
 
-app.listen(port, () => {console.log(`App listening on port ${port}`)})
+app.listen(port, () => {
+  console.log(`App listening on port ${port}`);
+});
 
 const puppeteer = require("puppeteer");
 const dotenv = require("dotenv");
@@ -26,8 +32,8 @@ async function run() {
   console.log("Start Bot");
 
   const browser = await puppeteer.launch({
-    headless: 'new',
-    args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    headless: "new",
+    args: ["--no-sandbox", "--disable-setuid-sandbox"],
   });
   const page = await browser.newPage();
 
@@ -69,7 +75,7 @@ async function run() {
         await clickPostButton(page);
         await new Promise((resolve) => setTimeout(resolve, 5000));
 
-        console.log(`${postUrl} Posted to ${groupName}`);
+        console.log(`${postUrl} Posted to ${groupName}\n`);
       }
     }
   } catch (err) {
