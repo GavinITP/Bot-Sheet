@@ -5,6 +5,7 @@ const {
   login,
   clickShareButton,
   clickGroupButton,
+  searchForGroup,
   selectGroup,
   clickPostButton,
 } = require("./helpers/fbActions");
@@ -16,8 +17,9 @@ run();
 async function run() {
   console.log("Start Bot");
 
+  // Launch Puppeteer browser
   const browser = await puppeteer.launch({
-    headless: "new",
+    headless: false,
     args: ["--no-sandbox", "--disable-setuid-sandbox"],
   });
   const page = await browser.newPage();
@@ -37,46 +39,57 @@ async function run() {
     }
 
     console.log("Logging In...");
-
     await page.setViewport({ width: 1200, height: 800 });
     await login(page, EMAIL, PASSWORD);
 
     console.log("Fetching Google Sheet Data...");
-
     const allPostsData = await getSheetData();
 
     for (const postData of allPostsData) {
       const { postUrl, groupNames } = postData;
 
       for (const groupName of groupNames) {
-        console.log("Navigating to URL:", postUrl);
-        await page.goto(postUrl);
-        await new Promise((resolve) => setTimeout(resolve, 1000));
+        try {
+          console.log("Navigating to URL:", postUrl);
+          await page.goto(postUrl);
+          await delay(1000);
 
-        console.log("Clicking Share Button...");
-        await clickShareButton(page);
-        await new Promise((resolve) => setTimeout(resolve, 1000));
+          console.log("Clicking Share Button...");
+          await clickShareButton(page);
+          await delay(1000);
 
-        console.log("Clicking Group Button...");
-        await clickGroupButton(page);
-        await new Promise((resolve) => setTimeout(resolve, 1000));
+          console.log("Clicking Group Button...");
+          await clickGroupButton(page);
+          await delay(1000);
 
-        console.log("Selecting Group...");
-        await selectGroup(page, groupName);
-        await new Promise((resolve) => setTimeout(resolve, 1000));
+          console.log("Searching For Group...");
+          await searchForGroup(page, groupName);
+          await delay(1000);
 
-        console.log("Sharing");
-        await clickPostButton(page);
-        await new Promise((resolve) => setTimeout(resolve, 1000));
+          console.log("Selecting Group...");
+          await selectGroup(page, groupName);
+          await delay(1000);
 
-        console.log(`Successfully share to ${groupName}\n`);
-        console.log("====================\n");
+          console.log("Sharing");
+          await clickPostButton(page);
+          await delay(1000);
+
+          console.log(`Successfully shared to ${groupName}\n`);
+        } catch (err) {
+          console.error(`Error sharing to group ${groupName}: ${err.message}`);
+        } finally {
+          console.log("====================\n");
+        }
       }
     }
   } catch (err) {
-    console.log(`Error: ${err.message}`);
+    console.error(`Error: ${err.message}`);
   } finally {
     await browser.close();
     console.log("Browser closed");
   }
+}
+
+function delay(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }

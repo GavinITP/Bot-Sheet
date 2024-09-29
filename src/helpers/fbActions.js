@@ -38,6 +38,11 @@ async function clickGroupButton(page) {
   });
 }
 
+async function searchForGroup(page, text) {
+  await page.waitForSelector('input[placeholder="Search for groups"]');
+  await page.type('input[placeholder="Search for groups"]', text);
+}
+
 async function selectGroup(page, groupName) {
   await page.evaluate(async (groupName) => {
     const spanElements = document.querySelectorAll("span");
@@ -73,6 +78,7 @@ module.exports = {
   login,
   clickShareButton,
   clickGroupButton,
+  searchForGroup,
   selectGroup,
   clickPostButton,
 };

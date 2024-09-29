@@ -25,6 +25,9 @@ const spreadsheetId = process.env.GOOGLE_SHEET_ID;
 const botFrequency = process.env.BOT_FREQUENCY;
 const mainTab = "Repost Master";
 
+// For Testing Purpose
+// getSheetData();
+
 async function getSheetData() {
   try {
     const res = await sheets.spreadsheets.values.get({
@@ -43,23 +46,31 @@ async function getSheetData() {
       const frequency = row[1];
 
       if (frequency !== botFrequency) continue;
+      if (postUrl.trim().length === 0) continue;
 
       for (const tab of groupTabs) {
-        if (tab.trim() === "" || tab.trim() === "-") continue;
+        if (tab.trim().length === 0 || tab.trim() === "-") continue;
 
         if (!allGroupTabs[tab]) {
           const groupNames = await getGroupNamesFromTabName(spreadsheetId, tab);
-
           allGroupTabs[tab] = groupNames;
         }
 
-        allPostsData.push({
-          postUrl,
-          groupNames: allGroupTabs[tab],
-        });
+        const newPost = { postUrl, groupNames: allGroupTabs[tab] };
+        const exists = allPostsData.some(
+          (post) =>
+            post.postUrl === newPost.postUrl &&
+            JSON.stringify(post.groupNames) ===
+              JSON.stringify(newPost.groupNames)
+        );
+
+        if (!exists) {
+          allPostsData.push(newPost);
+        }
       }
     }
 
+    // For Testing Purpose
     // console.log("allPostsData", allPostsData);
 
     return allPostsData;
@@ -71,12 +82,13 @@ async function getSheetData() {
 async function getGroupNamesFromTabName(spreadsheetId, tab) {
   const tabRes = await sheets.spreadsheets.values.get({
     spreadsheetId: spreadsheetId,
-    range: `'${tab}'!A1:Z`,
+    range: `'${tab}'!A3:Z`,
   });
 
   const tabRows = tabRes.data.values;
   const tabColumns = transpose(tabRows);
-  const groupNames = tabColumns[0].slice(1);
+  let groupNames = tabColumns[0];
+  groupNames = groupNames.map((name) => name.trim());
 
   return groupNames;
 }
