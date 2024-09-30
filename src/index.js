@@ -11,8 +11,6 @@ const {
 } = require("./helpers/fbActions");
 const { getSheetData } = require("./helpers/getSheetData");
 
-const start = performance.now();
-
 dotenv.config();
 run();
 
@@ -95,7 +93,3 @@ async function run() {
 function delay(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
-
-const end = performance.now();
-const executionTime = (end - start) / 1000;
-console.log(`Execution time: ${executionTime.toFixed(2)} seconds`);
