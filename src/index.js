@@ -19,7 +19,7 @@ async function run() {
 
   // Launch Puppeteer browser
   const browser = await puppeteer.launch({
-    headless: "new",
+    headless: false,
     args: ["--no-sandbox", "--disable-setuid-sandbox"],
   });
   const page = await browser.newPage();
@@ -52,7 +52,7 @@ async function run() {
         try {
           console.log("Navigating to URL:", postUrl);
           await page.goto(postUrl);
-          await delay(3000);
+          await delay(5000);
 
           console.log("Clicking Share Button...");
           await clickShareButton(page);
