@@ -11,6 +11,8 @@ const {
 } = require("./helpers/fbActions");
 const { getSheetData } = require("./helpers/getSheetData");
 
+const start = performance.now();
+
 dotenv.config();
 run();
 
@@ -19,7 +21,7 @@ async function run() {
 
   // Launch Puppeteer browser
   const browser = await puppeteer.launch({
-    headless: false,
+    headless: "new",
     args: ["--no-sandbox", "--disable-setuid-sandbox"],
   });
   const page = await browser.newPage();
@@ -52,27 +54,27 @@ async function run() {
         try {
           console.log("Navigating to URL:", postUrl);
           await page.goto(postUrl);
-          await delay(1000);
+          await delay(3000);
 
           console.log("Clicking Share Button...");
           await clickShareButton(page);
-          await delay(1000);
+          await delay(3000);
 
           console.log("Clicking Group Button...");
           await clickGroupButton(page);
-          await delay(1000);
+          await delay(3000);
 
           console.log("Searching For Group...");
           await searchForGroup(page, groupName);
-          await delay(1000);
+          await delay(3000);
 
           console.log("Selecting Group...");
           await selectGroup(page, groupName);
-          await delay(1000);
+          await delay(3000);
 
           console.log("Sharing");
           await clickPostButton(page);
-          await delay(1000);
+          await delay(3000);
 
           console.log(`Successfully shared to ${groupName}\n`);
         } catch (err) {
@@ -93,3 +95,7 @@ async function run() {
 function delay(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
+
+const end = performance.now();
+const executionTime = (end - start) / 1000;
+console.log(`Execution time: ${executionTime.toFixed(2)} seconds`);
