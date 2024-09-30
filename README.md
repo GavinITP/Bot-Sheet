@@ -12,10 +12,6 @@ npm install
 
 Create a new .env file in the root directory, based on the .env.example file. Update the values as needed.
 
-## 3. Google Configuration
-
-Similarly, create a google.json file in the root directory, using the google.example.json file as a template. Fill in the required details.
-
 # Run Script
 
 To start the application, simply run:
